@@ -21,10 +21,13 @@ options.add_argument("--mute-audio")
 options.add_argument("--disable-blink-features")
 options.add_argument('--profile-directory=Default')
 options.add_argument("--mute-audio")
+options.add_extension("2Captcha.crx")
+
 
 acc = 5
 o = ("1")
 mail42 = o * acc
+api = ("")
 
 
 
@@ -50,11 +53,21 @@ def work(mail43):
                 check = mal.split("@")
         driver = webdriver.Chrome(executable_path=r"chromedriver\chromedriver.exe", options=options)
         wait = WebDriverWait(driver, 30)
+        time.sleep(2)
+        driver.switch_to.window(driver.window_handles[1])
+        wait.until(EC.element_to_be_clickable((By.XPATH, '//input[@name="apiKey"]'))).send_keys(api)
+        driver.find_element_by_id("autoSubmitForms").click()
+        driver.find_element_by_id("autoSolveRecaptchaV2").click()
+        driver.find_element_by_id("autoSolveRecaptchaV3").click()
+        driver.find_element_by_id("connect").click()
+        time.sleep(2)
+        driver.switch_to.alert.accept()
         driver.get("https://slingshot.finance/mobile/RMC861ZSRUHC") # Реф.ссылка
         wait.until(EC.element_to_be_clickable((By.ID, 'top-input'))).send_keys(Keys.CONTROL + "a")
         wait.until(EC.element_to_be_clickable((By.ID, 'top-input'))).send_keys(Keys.DELETE)
         wait.until(EC.element_to_be_clickable((By.ID, 'top-input'))).send_keys(mal)
         wait.until(EC.element_to_be_clickable((By.ID, 'top-button'))).click()
+
         time.sleep(5)
         l = 0
         while l == 0:
@@ -116,5 +129,5 @@ def work(mail43):
 
 
 if __name__ == '__main__':
-    p = Pool(processes=3)
+    p = Pool(processes=1)
     p.map(work, mail42)
